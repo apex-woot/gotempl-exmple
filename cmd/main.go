@@ -12,6 +12,7 @@ func main() {
 	// initialize config
 	app := internals.Config{Router: router}
 
+	gin.SetMode(gin.ReleaseMode)
 	// routes
 	app.Routes()
 
