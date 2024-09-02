@@ -8,8 +8,10 @@ import (
 )
 
 var (
-	xataAPIKey = GetEnvVariable("XATA_API_KEY")
-	baseURL    = GetEnvVariable("XATA_DATABASE_URL")
+	// xataAPIKey = GetEnvVariable("XATA_API_KEY")
+	// baseURL    = GetEnvVariable("XATA_DATABASE_URL")
+	xataAPIKey = "https://Vitalii-Kohut-s-workspace-4p8s5r.eu-central-1.xata.sh/db/todo"
+	baseURL    = "xau_ff9qjSrlhEiVB5E5IV78IPnH8pVFgtnX"
 )
 
 func createRequest(method, url string, bodyData *bytes.Buffer) (*http.Request, error) {
