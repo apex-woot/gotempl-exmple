@@ -34,4 +34,4 @@ WORKDIR /root/
 COPY --from=builder /app/out/dist /dist
 
 # Set the binary as the entry point
-ENTRYPOINT ["../dist"]
+ENTRYPOINT ["/dist"]
