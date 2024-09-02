@@ -2,6 +2,7 @@ package internals
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -13,6 +14,10 @@ var (
 	baseURL    = "https://Vitalii-Kohut-s-workspace-4p8s5r.eu-central-1.xata.sh/db/todo"
 	xataAPIKey = "xau_ff9qjSrlhEiVB5E5IV78IPnH8pVFgtnX"
 )
+
+var transport = &http.Transport{
+	TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+}
 
 func createRequest(method, url string, bodyData *bytes.Buffer) (*http.Request, error) {
 	var req *http.Request
@@ -50,7 +55,7 @@ func (app *Config) createTodoService(newTodo *TodoRequest) (*TodoResponse, error
 		return nil, err
 	}
 
-	client := &http.Client{}
+	client := &http.Client{Transport: transport}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
@@ -67,7 +72,7 @@ func (app *Config) createTodoService(newTodo *TodoRequest) (*TodoResponse, error
 func (app *Config) deleteTodoService(id string) (string, error) {
 	fullURL := fmt.Sprintf("%s:main/tables/Todo/data/%s", baseURL, id)
 
-	client := &http.Client{}
+	client := &http.Client{Transport: transport}
 	req, err := createRequest("DELETE", fullURL, nil)
 	if err != nil {
 		return "", err
@@ -87,7 +92,7 @@ func (app *Config) getAllTodosService() ([]*Todo, error) {
 
 	fullURL := fmt.Sprintf("%s:main/tables/Todo/query", baseURL)
 	fmt.Printf("%s", fullURL)
-	client := &http.Client{}
+	client := &http.Client{Transport: transport}
 	req, err := createRequest("POST", fullURL, nil)
 	if err != nil {
 		return nil, err

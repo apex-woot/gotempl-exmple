@@ -9,6 +9,8 @@
 *.dylib
 .env
 
+.git
+
 dist
 
 # Test binary, built with `go test -c`
