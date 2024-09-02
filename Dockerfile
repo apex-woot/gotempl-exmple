@@ -22,7 +22,7 @@ RUN go mod download
 COPY --from=generate-stage /app .
 
 # Build the binary
-RUN mkdir -p ./out && GOARCH=amd64 GOOS=linux go build -o ./out/dist ./cmd/main.go
+RUN mkdir -p ./out && CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -o ./out/dist ./cmd/main.go
 
 # Stage 3: Create a minimal image with the built binary
 FROM scratch
