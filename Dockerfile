@@ -1,28 +1,30 @@
-# Stage 1: Generate and Build the Go binary
-FROM golang:1.22 AS builder
-
+# Stage 1: Generate files using templ
 FROM ghcr.io/a-h/templ:latest AS generate-stage
-COPY --chown=65532:65532 . /app
-
 
 WORKDIR /app
 
-# Copy the Go Modules manifests
-COPY go.mod go.sum ./
-
-# Install dependencies
-RUN go mod download
-
 # Copy the source code into the container
-COPY . .
+COPY --chown=65532:65532 . .
 
 # Generate files using templ
 RUN ["templ", "generate"]
 
-# Create the output directory and build the binary
+# Stage 2: Build the Go binary
+FROM golang:1.22 AS builder
+
+WORKDIR /app
+
+# Copy the Go Modules manifests and install dependencies
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy the source code and generated files from the previous stage
+COPY --from=generate-stage /app .
+
+# Build the binary
 RUN mkdir -p ./out && GOARCH=amd64 GOOS=linux go build -o ./out/dist ./cmd/main.go
 
-# Stage 2: Create a minimal image with the built binary
+# Stage 3: Create a minimal image with the built binary
 FROM scratch
 
 # Set the working directory
