@@ -11,6 +11,11 @@ RUN go mod download
 # Copy the source code into the container
 COPY . .
 
+FROM ghcr.io/a-h/templ:latest AS generate-stage
+COPY --chown=65532:65532 . /app
+WORKDIR /app
+RUN ["templ", "generate"]
+
 # Build the binary
 RUN make build
 
