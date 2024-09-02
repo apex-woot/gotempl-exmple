@@ -23,13 +23,7 @@ templ Index(todos []*Todo) {
 				</nav>
 				<div class="mt-6 w-full flex justify-center items-center flex-col">
 					// FORM PROCESSING
-					<form
-						hx-post="/"
-						hx-trigger="submit"
-						hx-swap="none"
-						onsubmit="reloadPage()"
-						class="w-96"
-					>
+					<form hx-post="/" hx-trigger="submit" hx-swap="innerHTML" onsubmit="reloadPage()" class="w-96">
 						<textarea
 							name="description"
 							cols="30"
@@ -38,11 +32,10 @@ templ Index(todos []*Todo) {
 							placeholder="Input todo details"
 							required
 						></textarea>
-						<button
-							class="py-1 px-4 w-full h-10 rounded-lg text-white bg-zinc-800"
-						>
+						<button class="py-1 px-4 w-full h-10 rounded-lg text-white bg-zinc-800">
 							Create
 						</button>
+						<p class="htmx-indicator">loading...</p>
 					</form>
 					<section class="border-t border-t-zinc-200 mt-6 px-2 py-4 w-96">
 						// LOOP THROUGH THE TODOS
@@ -54,10 +47,7 @@ templ Index(todos []*Todo) {
 										{ todo.Description }
 									</p>
 									<div class="flex gap-4 items-center mt-2">
-										<a
-											href="#"
-											class="flex items-center border py-1 px-2 rounded-lg"
-										>
+										<a href="#" class="flex items-center border py-1 px-2 rounded-lg">
 											<p class="text-sm">Edit</p>
 										</a>
 										<button
@@ -79,10 +69,10 @@ templ Index(todos []*Todo) {
 		@components.Footer()
 	</html>
 	<script>
-		function reloadPage() {
-			 setTimeout(function() {
-            window.location.reload();
-        }, 2000);
-		}
-	</script>
+  function reloadPage() {
+    setTimeout(function () {
+      window.location.reload();
+    }, 2000);
+  }
+</script>
 }

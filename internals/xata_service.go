@@ -7,8 +7,10 @@ import (
 	"net/http"
 )
 
-var xataAPIKey = GetEnvVariable("XATA_API_KEY")
-var baseURL = GetEnvVariable("XATA_DATABASE_URL")
+var (
+	xataAPIKey = GetEnvVariable("XATA_API_KEY")
+	baseURL    = GetEnvVariable("XATA_DATABASE_URL")
+)
 
 func createRequest(method, url string, bodyData *bytes.Buffer) (*http.Request, error) {
 	var req *http.Request
@@ -82,6 +84,7 @@ func (app *Config) getAllTodosService() ([]*Todo, error) {
 	var todos []*Todo
 
 	fullURL := fmt.Sprintf("%s:main/tables/Todo/query", baseURL)
+	fmt.Printf("%s", fullURL)
 	client := &http.Client{}
 	req, err := createRequest("POST", fullURL, nil)
 	if err != nil {

@@ -1,0 +1,30 @@
+FROM golang:1.22 AS builder
+
+WORKDIR /app
+
+# Copy the Go Modules manifests
+COPY go.mod go.sum ./
+
+# Install dependencies
+RUN go mod download
+
+# Copy the source code into the container
+COPY . .
+
+# Build the binary
+RUN make build
+
+# Stage 2: Create a minimal image with the built binary
+FROM scratch
+
+# Set the working directory
+WORKDIR /root/
+
+# Copy the binary from the builder stage
+COPY --from=builder /app/out/dist .
+
+# Expose port if your application requires one (optional)
+# EXPOSE 8080
+
+# Run the binary
+CMD ["./dist"]

@@ -9,11 +9,11 @@ import (
 func main() {
 	router := gin.Default()
 
-	//initialize config
+	// initialize config
 	app := internals.Config{Router: router}
 
-	//routes
+	// routes
 	app.Routes()
 
-	router.Run(":8080")
+	router.Run(":4000")
 }
