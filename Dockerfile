@@ -1,4 +1,8 @@
+# Stage 1: Generate and Build the Go binary
 FROM golang:1.22 AS builder
+
+# Install templ tool
+RUN go install ghcr.io/a-h/templ@latest
 
 WORKDIR /app
 
@@ -11,14 +15,11 @@ RUN go mod download
 # Copy the source code into the container
 COPY . .
 
-FROM ghcr.io/a-h/templ:latest AS generate-stage
-COPY --chown=65532:65532 . /app
-WORKDIR /app
-RUN ["templ", "generate"]
+# Generate files using templ
+RUN templ generate
 
-RUN mkdir -p ./out
-# Build the binary
-RUN GOARCH=amd64 GOOS=linux go build -o ./out/dist ./cmd/main.go
+# Create the output directory and build the binary
+RUN mkdir -p ./out && GOARCH=amd64 GOOS=linux go build -o ./out/dist ./cmd/main.go
 
 # Stage 2: Create a minimal image with the built binary
 FROM scratch
@@ -27,10 +28,7 @@ FROM scratch
 WORKDIR /root/
 
 # Copy the binary from the builder stage
-COPY --from=builder /app/out/dist .
+COPY --from=builder /app/out/dist /dist
 
-# Expose port if your application requires one (optional)
-# EXPOSE 8080
-
-# Run the binary
-CMD ["./dist"]
+# Set the binary as the entry point
+ENTRYPOINT ["/dist"]
