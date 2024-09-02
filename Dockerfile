@@ -17,7 +17,8 @@ WORKDIR /app
 RUN ["templ", "generate"]
 
 # Build the binary
-RUN make build
+RUN GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -o ./out/dist ./cmd/main.go
+
 
 # Stage 2: Create a minimal image with the built binary
 FROM scratch
