@@ -28,10 +28,10 @@ RUN mkdir -p ./out && GOARCH=amd64 GOOS=linux go build -o ./out/dist ./cmd/main.
 FROM scratch
 
 # Set the working directory
-WORKDIR /root/
+WORKDIR /root
 
 # Copy the binary from the builder stage
-COPY --from=builder /app/out/dist /dist
+COPY --from=builder ./app/out/dist ./dist
 
 # Set the binary as the entry point
-ENTRYPOINT ["/dist"]
+ENTRYPOINT ["./dist"]
