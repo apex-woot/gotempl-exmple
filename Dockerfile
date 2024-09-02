@@ -16,8 +16,9 @@ COPY --chown=65532:65532 . /app
 WORKDIR /app
 RUN ["templ", "generate"]
 
+RUN mkdir -p ./out
 # Build the binary
-RUN mkdir -p ./out && GOARCH=amd64 GOOS=linux go build -o ./out/dist ./cmd/main.go
+RUN GOARCH=amd64 GOOS=linux go build -o ./out/dist ./cmd/main.go
 
 # Stage 2: Create a minimal image with the built binary
 FROM scratch
