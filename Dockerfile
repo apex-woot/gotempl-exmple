@@ -1,8 +1,9 @@
 # Stage 1: Generate and Build the Go binary
 FROM golang:1.22 AS builder
 
-# Install templ tool
-RUN go install ghcr.io/a-h/templ@latest
+FROM ghcr.io/a-h/templ:latest AS generate-stage
+COPY --chown=65532:65532 . /app
+
 
 WORKDIR /app
 
@@ -16,7 +17,7 @@ RUN go mod download
 COPY . .
 
 # Generate files using templ
-RUN templ generate
+RUN ["templ", "generate"]
 
 # Create the output directory and build the binary
 RUN mkdir -p ./out && GOARCH=amd64 GOOS=linux go build -o ./out/dist ./cmd/main.go
